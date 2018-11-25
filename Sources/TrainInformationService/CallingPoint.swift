@@ -9,8 +9,8 @@
 import Foundation
 
 public struct CallingPoint {
-	let stationName: String
-	let stationCode: String
-	let departureTime: String
-	let currentStatus: String
+	public let stationName: String
+	public let stationCode: String
+	public let departureTime: String
+	public let currentStatus: String
 }

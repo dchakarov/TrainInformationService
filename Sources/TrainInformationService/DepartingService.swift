@@ -9,9 +9,9 @@
 import Foundation
 
 public struct DepartingService {
-	let serviceId: String
-	let destination: String
-	let departureTime: String
-	let currentStatus: String
-	let delayReason: String?
+	public let serviceId: String
+	public let destination: String
+	public let departureTime: String
+	public let currentStatus: String
+	public let delayReason: String?
 }
