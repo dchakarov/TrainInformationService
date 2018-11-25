@@ -53,7 +53,7 @@ trainInformationService.departureBoard(for: stationCSRCode, items: 5) { result i
 }
 ```
 
-The resulting `board` would be an array of up to 5 [DepartingService](TrainInformationService/Sources/TrainInformationService/DepartingService.swift) objects.
+The resulting `board` would be an array of up to 5 [DepartingService](https://github.com/dchakarov/TrainInformationService/blob/master/Sources/TrainInformationService/DepartingService.swift) objects.
 
 ### Get service next stops (GetServiceDetails)
 
@@ -64,4 +64,8 @@ trainInformationService.serviceDetails(service.serviceId) { callingPoints in
 }
 ```
 
-Here `callingPoints` is an array of [CallingPoint](TrainInformationService/Sources/TrainInformationService/CallingPoint.swift) objects.
+Here `callingPoints` is an array of [CallingPoint](https://github.com/dchakarov/TrainInformationService/blob/master/Sources/TrainInformationService/CallingPoint.swift) objects.
+
+## Contributing
+
+Contributions are welcome! Just submit a PR.
