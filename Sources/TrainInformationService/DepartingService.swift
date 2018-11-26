@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct DepartingService {
+public struct DepartingService: Codable {
 	public let serviceId: String
 	public let destination: String
 	public let departureTime: String
