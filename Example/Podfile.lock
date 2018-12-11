@@ -1,6 +1,6 @@
 PODS:
   - SWXMLHash (4.7.5)
-  - TrainInformationService (0.1.2):
+  - TrainInformationService (0.1.3):
     - SWXMLHash
 
 DEPENDENCIES:
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   SWXMLHash: 9d29f0d9f83ad07851572421cd55a5971c368e7f
-  TrainInformationService: ec059644d1a243ace6ec85dbfc714002953a5723
+  TrainInformationService: ac16887766b8a63e7e4a3ed99afbc2c6b0a758b3
 
 PODFILE CHECKSUM: 7aafe47723dc8c9b44e5a5c4626ae40272778998
 
