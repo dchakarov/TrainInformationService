@@ -1,5 +1,5 @@
 # TrainInformationService
-[![Build Status](https://app.bitrise.io/app)](https://app.bitrise.io/app/)
+[![Build Status](https://app.bitrise.io/app/88a957706495b5f6/status.svg?token=PeXfbfTz6p6kexb9dtuUhA&branch=master)](https://app.bitrise.io/app/88a957706495b5f6)
 [![Version](https://img.shields.io/cocoapods/v/TrainInformationService.svg?style=flat)](https://cocoapods.org/pods/TrainInformationService)
 [![License](https://img.shields.io/cocoapods/l/TrainInformationService.svg?style=flat)](https://cocoapods.org/pods/TrainInformationService)
 [![Platform](https://img.shields.io/cocoapods/p/TrainInformationService.svg?style=flat)](https://cocoapods.org/pods/TrainInformationService)
