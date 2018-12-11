@@ -1,0 +1,23 @@
+PODS:
+  - SWXMLHash (4.7.5)
+  - TrainInformationService (0.1.2):
+    - SWXMLHash
+
+DEPENDENCIES:
+  - TrainInformationService (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SWXMLHash
+
+EXTERNAL SOURCES:
+  TrainInformationService:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SWXMLHash: 9d29f0d9f83ad07851572421cd55a5971c368e7f
+  TrainInformationService: ec059644d1a243ace6ec85dbfc714002953a5723
+
+PODFILE CHECKSUM: 7aafe47723dc8c9b44e5a5c4626ae40272778998
+
+COCOAPODS: 1.5.3

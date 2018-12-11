@@ -1,0 +1,9 @@
+use_frameworks!
+
+target 'TrainInformationService_Example' do
+	platform :ios, '11.0'
+  pod 'TrainInformationService', :path => '../'
+  target 'TrainInformationService_Tests' do
+    inherit! :search_paths
+  end
+end

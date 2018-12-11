@@ -1,11 +1,16 @@
 # TrainInformationService
+[![Build Status](https://app.bitrise.io/app)](https://app.bitrise.io/app/)
+[![Version](https://img.shields.io/cocoapods/v/TrainInformationService.svg?style=flat)](https://cocoapods.org/pods/TrainInformationService)
+[![License](https://img.shields.io/cocoapods/l/TrainInformationService.svg?style=flat)](https://cocoapods.org/pods/TrainInformationService)
+[![Platform](https://img.shields.io/cocoapods/p/TrainInformationService.svg?style=flat)](https://cocoapods.org/pods/TrainInformationService)
+
 Information services for trains in the UK, using the National Rail open API
 
 The API is a stab at a friendlier interface for the [National Rail Live Departure Boards Web Service](https://lite.realtime.nationalrail.co.uk/OpenLDBWS/)
 
 ## Installation
 
-TrainInformationService can be installed using [Swift Package Manager](https://swift.org/package-manager/).
+TrainInformationService can be installed using [Swift Package Manager](https://swift.org/package-manager/) or [CocoaPods](https://cocoapods.org).
 
 ### Swift Package Manager
 
@@ -19,6 +24,16 @@ dependencies: [
 ```
 
 `swift build` should then pull in and compile TrainInformationService for you to begin using.
+
+### CocoaPods
+
+To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod 'TrainInformationService'
+```
+
 
 ## Getting Started
 
@@ -69,3 +84,11 @@ Here `callingPoints` is an array of [CallingPoint](https://github.com/dchakarov/
 ## Contributing
 
 Contributions are welcome! Just submit a PR.
+
+## Author
+
+Dimitar Chakarov, dimitar@dchakarov.com
+
+## License
+
+This is free and unencumbered software released into the public domain. See the LICENSE file for more info.
