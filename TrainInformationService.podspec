@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'TrainInformationService'
-  s.version          = '0.1.3'
+  s.version          = '0.1.4'
   s.swift_version    = '4.2'
   s.summary          = 'Information services for trains in the UK, using the National Rail open API'
   s.description      = <<-DESC

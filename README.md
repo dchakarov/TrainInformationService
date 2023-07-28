@@ -70,11 +70,18 @@ trainInformationService.departureBoard(for: stationCSRCode, items: 5) { result i
 
 The resulting `board` would be an array of up to 5 [DepartingService](https://github.com/dchakarov/TrainInformationService/blob/master/Sources/TrainInformationService/DepartingService.swift) objects.
 
-### Get service next stops (GetServiceDetails)
+### Get service next and previous stops (getUpcomingCallingPoints, getPreviousCallingPoints)
 
 Given you have a service ID (e.g. a DepartingService object from the above call), you can get a list of stops remaining on its schedule by doing this:
 ``` swift
-trainInformationService.serviceDetails(service.serviceId) { callingPoints in
+trainInformationService.getUpcomingCallingPoints(service.serviceId) { callingPoints in
+  print(callingPoints)
+}
+```
+
+and get the list of stops already passed by doing the following:
+``` swift
+trainInformationService.getPreviousCallingPoints(service.serviceId) { callingPoints in
   print(callingPoints)
 }
 ```
