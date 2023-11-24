@@ -89,6 +89,53 @@ public class TrainInformationService {
 			}
 		}
 	}
+    
+    public func stationBoard(for station: String, to destination: String? = nil, items: Int, completion: @escaping (Result<StationBoard>) -> Void) {
+        var parameters = ["numRows": "\(items)", "crs": station]
+        if let destination = destination, !destination.isEmpty {
+            parameters["filterCrs"] = destination
+        }
+        executeSoapRequest("GetDepartureBoardRequest", parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                var departures: [DepartingService] = []
+                let xml = SWXMLHash.config { config in
+                    config.shouldProcessNamespaces = true
+                    }.parse(data)
+                let stationBoardResultXml = xml["Envelope"]["Body"]["GetDepartureBoardResponse"]["GetStationBoardResult"]
+                
+                for service in stationBoardResultXml["trainServices"]["service"].all {
+                    var delayReason: String?
+                    let serviceId = service["serviceID"].element!.text
+                    let destination = service["destination"]["location"]["locationName"].element!.text
+                    let departureTime = service["std"].element!.text
+                    let currentStatus = service["etd"].element!.text
+                    if let reason = service["delayReason"].element?.text {
+                        delayReason = reason
+                    }
+                    let departingService = DepartingService(serviceId: serviceId, destination: destination, departureTime: departureTime, currentStatus: currentStatus, delayReason: delayReason)
+                    departures.append(departingService)
+                }
+                
+                let dateFormatter = ISO8601DateFormatter()
+                dateFormatter.formatOptions = [
+                    .withInternetDateTime,
+                    .withFractionalSeconds
+                ]
+                
+                let stationBoard = StationBoard(generatedAt: dateFormatter.date(from: stationBoardResultXml["generatedAt"].element!.text)!,
+                                                locationName: stationBoardResultXml["locationName"].element!.text,
+                                                stationCode: stationBoardResultXml["crs"].element!.text,
+                                                filterLocationName: stationBoardResultXml["filterLocationName"].element?.text,
+                                                filterStationCode: stationBoardResultXml["filtercrs"].element?.text,
+                                                trainServices: departures)
+                
+                completion(.success(stationBoard))
+            case .error(let error):
+                completion(.error(error))
+            }
+        }
+    }
 	
 	public func serviceDetails(_ serviceID: String, completion: @escaping (Result<[CallingPoint]>) -> Void) {
 		let parameters = ["serviceID": serviceID]
@@ -178,6 +225,50 @@ extension TrainInformationService {
         }
         
         return board
+    }
+    
+    public func stationBoard(for station: String, to destination: String? = nil, items: Int) async throws -> StationBoard {
+        var parameters = ["numRows": "\(items)", "crs": station]
+        
+        if let destination = destination, !destination.isEmpty {
+            parameters["filterCrs"] = destination
+        }
+        
+        let data = try await executeSoapRequest("GetDepartureBoardRequest", parameters: parameters)
+        
+        var departures: [DepartingService] = []
+        let xml = SWXMLHash.config { config in
+            config.shouldProcessNamespaces = true
+        }.parse(data)
+        let stationBoardResultXml = xml["Envelope"]["Body"]["GetDepartureBoardResponse"]["GetStationBoardResult"]
+        
+        for service in stationBoardResultXml["trainServices"]["service"].all {
+            var delayReason: String?
+            let serviceId = service["serviceID"].element!.text
+            let destination = service["destination"]["location"]["locationName"].element!.text
+            let departureTime = service["std"].element!.text
+            let currentStatus = service["etd"].element!.text
+            if let reason = service["delayReason"].element?.text {
+                delayReason = reason
+            }
+            let departingService = DepartingService(serviceId: serviceId, destination: destination, departureTime: departureTime, currentStatus: currentStatus, delayReason: delayReason)
+            departures.append(departingService)
+        }
+        
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [
+            .withInternetDateTime,
+            .withFractionalSeconds
+        ]
+        
+        let stationBoard = StationBoard(generatedAt: dateFormatter.date(from: stationBoardResultXml["generatedAt"].element!.text)!,
+                                        locationName: stationBoardResultXml["locationName"].element!.text,
+                                        stationCode: stationBoardResultXml["crs"].element!.text,
+                                        filterLocationName: stationBoardResultXml["filterLocationName"].element?.text,
+                                        filterStationCode: stationBoardResultXml["filtercrs"].element?.text,
+                                        trainServices: departures)
+        
+        return stationBoard
     }
     
     public func serviceDetails(_ serviceID: String) async throws -> [CallingPoint] {
