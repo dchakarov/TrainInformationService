@@ -114,3 +114,90 @@ public class TrainInformationService {
 		}
 	}
 }
+
+@available(iOS 15.0, *)
+extension TrainInformationService {
+    
+    func executeSoapRequest(_ request: String, parameters: [String: String]) async throws -> Data {
+        var paramLines = [String]()
+        for (key, value) in parameters {
+            paramLines.append("<ns1:\(key)>\(value)</ns1:\(key)>")
+        }
+        let paramString = paramLines.joined()
+        let soapMessage = """
+        <SOAP-ENV:Envelope
+        xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:ns1="http://thalesgroup.com/RTTI/2017-10-01/ldb/"
+        xmlns:ns2="http://thalesgroup.com/RTTI/2010-11-01/ldb/commontypes">
+        <SOAP-ENV:Header>
+        <ns2:AccessToken>
+        <ns2:TokenValue>\(token)</ns2:TokenValue>
+        </ns2:AccessToken>
+        </SOAP-ENV:Header>
+        <SOAP-ENV:Body>
+        <ns1:\(request)>\(paramString)</ns1:\(request)>
+        </SOAP-ENV:Body>
+        </SOAP-ENV:Envelope>
+        """
+        let url = URL(string: apiUrl)
+        var urlRequest = URLRequest(url: url!)
+        urlRequest.addValue("text/xml; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        urlRequest.addValue(String(soapMessage.count), forHTTPHeaderField: "Content-Length")
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = soapMessage.data(using: .utf8, allowLossyConversion: false)
+        
+        let (data, _) = try await defaultSession.data(for: urlRequest)
+        
+        return data
+    }
+    
+    public func departureBoard(for station: String, to destination: String? = nil, items: Int) async throws -> [DepartingService] {
+        var parameters = ["numRows": "\(items)", "crs": station]
+        
+        if let destination = destination {
+            parameters["filterCrs"] = destination
+        }
+        
+        let data = try await executeSoapRequest("GetDepartureBoardRequest", parameters: parameters)
+        
+        var board: [DepartingService] = []
+        let xml = SWXMLHash.config { config in
+            config.shouldProcessNamespaces = true
+        }.parse(data)
+        for service in xml["Envelope"]["Body"]["GetDepartureBoardResponse"]["GetStationBoardResult"]["trainServices"]["service"].all {
+            var delayReason: String?
+            let serviceId = service["serviceID"].element!.text
+            let destination = service["destination"]["location"]["locationName"].element!.text
+            let departureTime = service["std"].element!.text
+            let currentStatus = service["etd"].element!.text
+            if let reason = service["delayReason"].element?.text {
+                delayReason = reason
+            }
+            let departingService = DepartingService(serviceId: serviceId, destination: destination, departureTime: departureTime, currentStatus: currentStatus, delayReason: delayReason)
+            board.append(departingService)
+        }
+        
+        return board
+    }
+    
+    public func serviceDetails(_ serviceID: String) async throws -> [CallingPoint] {
+        let parameters = ["serviceID": serviceID]
+        
+        let data = try await executeSoapRequest("GetServiceDetailsRequest", parameters: parameters)
+        
+        var schedule: [CallingPoint] = []
+        let xml = SWXMLHash.config { config in
+            config.shouldProcessNamespaces = true
+        }.parse(data)
+        for callingPointItem in xml["Envelope"]["Body"]["GetServiceDetailsResponse"]["GetServiceDetailsResult"]["subsequentCallingPoints"]["callingPointList"]["callingPoint"].all {
+            let stationName = callingPointItem["locationName"].element!.text
+            let stationCode = callingPointItem["crs"].element!.text
+            let departureTime = callingPointItem["st"].element!.text
+            let currentStatus = callingPointItem["et"].element!.text
+            let callingPoint = CallingPoint(stationName: stationName, stationCode: stationCode, departureTime: departureTime, currentStatus: currentStatus)
+            schedule.append(callingPoint)
+        }
+        
+        return schedule
+    }
+}
