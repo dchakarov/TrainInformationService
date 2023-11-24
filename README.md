@@ -52,9 +52,28 @@ let trainInformationService = TrainInformationService(
 
 Currently the service has support for two of the OpenLDWS methods. Both are asynchronous as they are fetching the data in real time from the National Rail Live Departure Boards Web Service. For a full list of methods and documentation you can go here - https://lite.realtime.nationalrail.co.uk/OpenLDBWS/
 
-### Get the live departure board for a given station (GetDepartureBoard)
+### Get the station board for a given station (GetStationBoard)
 
 You can find the list of stations with their CSR codes here - http://www.nationalrail.co.uk/stations_destinations/48541.aspx
+
+``` swift
+let stationCSRCode = "PAD" // Paddington
+let paddingtonBoard = await trainService.stationBoard(for: stationCSRCode, items: 10)
+```
+
+The resulting [`StationBoard`](https://github.com/kiliszekmarcin/TrainInformationService/blob/master/Sources/TrainInformationService/StationBoard.swift) would be an object with a generatedAt date, full origin and destination names, and an array of up to 10 [DepartingService](https://github.com/dchakarov/TrainInformationService/blob/master/Sources/TrainInformationService/DepartingService.swift) objects.
+
+### Filtering by destiantion
+
+You can fetch results only to a specific destination, using its CSR code
+
+``` swift
+let originCSRCode = "KGX" // Kings Cross
+let destinationCSRCode = "FPK" // Finsbury Park
+let filteredBoard = await trainService.stationBoard(for: originCSRCode, to: destinationCSRCode, items: 10)
+```
+
+### Get the live departure board for a given station (GetDepartureBoard)
 
 ``` swift
 let stationCSRCode = "PAD" // Paddington
