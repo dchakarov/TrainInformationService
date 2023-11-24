@@ -62,8 +62,11 @@ public class TrainInformationService {
 		dataTask?.resume()
 	}
 	
-	public func departureBoard(for station: String, items: Int, completion: @escaping (Result<[DepartingService]>) -> Void) {
-		let parameters = ["numRows": "\(items)", "crs": station]
+	public func departureBoard(for station: String, to destination: String? = nil, items: Int, completion: @escaping (Result<[DepartingService]>) -> Void) {
+		var parameters = ["numRows": "\(items)", "crs": station]
+        if let destination = destination, !destination.isEmpty {
+            parameters["filterCrs"] = destination
+        }
 		executeSoapRequest("GetDepartureBoardRequest", parameters: parameters) { result in
 			switch result {
 			case .success(let data):
